@@ -1,0 +1,56 @@
+= ArTestRunner
+Run the ActiveRecord test suite with your gem/module/plugin loaded. Choose the ActiveRecord version and database.
+
+
+== Install
+  script/plugin install git://github.com/blythedunham/ar_test_runner
+
+== Run rake tests from <tt>RAILS_ROOT</tt>
+
+Run all plugins and lib files against sqlite for app version
+  rake test:activerecord:sqlite
+
+Test 2.3.2 with <tt>rails_devs_for_data_integrity</tt> plugin loaded on mysql
+  rake test:activerecord:mysql PLUGIN=rails_devs_for_data_integrity AR_DIR=/Library/Ruby/Gems/1.8/gems/activerecord-2.3.2
+
+
+
+Parameters
+* <tt>AR_DIR</tt> - ActiveRecord directory. Works with frozen rails directories and gem locations. Defaults to the apps version of ActiveRecord
+* <tt>PLUGIN</tt> - specify a plugin to use
+* <tt>FILE</tt> - files to load separated with commas. Create a file that requires everything you need loaded for super detailed configurations. Relative and full paths are fine.
+* <tt>REQUIRE</tt> - like FILE but does not expand the path. Use for gems and requiring file that are not relative to RAILS_ROOT</tt>.
+* <tt>SKIP</tt> - list of directories or file names separated by commas to exclude.
+* <tt>DRY_RUN</tt> - prints out list of files to loaded but does not run the tests
+* <tt>AR_RUN_DEFAULT</tt> - set to true to include all files in the lib directory and plugins. These are run when <tt>REQUIRE</tt>,<tt>FILE</tt>, and <tt>PLUGIN</tt> is not specified
+
+If <tt>REQUIRE</tt>,<tt>FILE</tt>, and <tt>PLUGIN</tt> are not specified, or <tt>AR_RUN_DEFAULT</tt> is set, all plugins(<tt>vendor/plugins/**/init.rb</tt>) and lib files(<tt>lib/*.rb</tt>) are loaded. Use <tt>SKIP</tt> to exclude directories. Plugins referencing <tt>ActionController</tt> are automatically disabled.
+
+== Examples
+
+<b>Run default</b> 
+Run (plugins and libs) on postgre
+  rake activerecord:test:postgresql
+
+<b>Skip</b>
+Load everything in lib and all of the plugins but skip <tt>smsonrails</tt> using a frozen version of 2.2.2
+  rake test:activerecord:sqlite3 AR_DIR=/Users/blythedunham/projects/arversions/AR2.2.2/vendor/rails/activerecord SKIP=smsonrails
+
+<b>Custom File </b>
+If there are a lot of files to load, or for super custom requires, create a file and require everything there. Will use which ever version of <tt>ActiveRecord</tt> your app uses (loaded in <tt>config/boot.rb</tt>)
+
+<tt>ar_requires.rb</tt>
+might look like:
+  require File.dirname(__FILE__) + '../../models/awesome.rb'
+  require 'supergemthing'
+
+Then run it:
+  rake activerecord:test:mysql FILES=config/ar_regression_requires.rb
+
+== Developers
+* Blythe Dunham http://snowgiraffe.com
+
+== Homepage
+* Project Site: http://github.com/blythedunham/ar_test_runner
+
+Copyright (c) 2009 Blythe Dunham, released under the MIT license

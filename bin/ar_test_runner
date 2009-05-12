@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+require 'config/boot'
+require 'ar_test_runner'
+ArTestRunner.run!
