@@ -4,7 +4,7 @@ class ArTestRunner
   
   unless defined? ADAPTERS
     ADAPTERS = %w( mysql postgresql sqlite sqlite3 firebird db2 oracle sybase openbase frontbase jdbcmysql jdbcpostgresql jdbcsqlite3 jdbcderby jdbch2 jdbchsqldb )
-    REQUIRE_ALL_GLOB= %w(vendor/plugins/**/init.rb lib/*.rb)
+    REQUIRE_ALL_GLOB= %w(vendor/plugins/*/init.rb lib/*.rb)
     DEFAULT_REQUIRES = [File.join(File.dirname(__FILE__), 'ar_test_runner_includes.rb')]
   end
   
@@ -15,19 +15,15 @@ class ArTestRunner
   
   # Run the unit tests
   def run
+    old_dir, old_env = Dir.pwd, ENV['RUBYOPT']
     print_info
-    
     return true if ENV['DRY_RUN'] == 'true'
     
-    old_dir, old_env = Dir.pwd, ENV['RUBYOPT']
-    
-    Dir.chdir(activerecord_dir)
-    ENV['LOAD_PATH'] = ''
-    ENV['RUBYOPT'] = required_files.collect{|f| "-r#{f}"}.join(' ')#"-r rubygems -ractiverecord.rb -r#{init_file}"
-
-    load "Rakefile"
+    Dir.chdir( activerecord_dir )
+    ENV['RUBYOPT'] = required_files.collect{ |f| "-r#{f}" }.join(' ')#"-r rubygems -ractiverecord.rb -r#{init_file}"
+    load File.join( activerecord_dir, "Rakefile" )
     Rake::Task[ "test_#{adapter}" ].invoke
-    Dir.chdir(old_dir)
+    Dir.chdir( old_dir )
     ENV['RUBYOPT'] = old_env
   end
   
@@ -125,7 +121,10 @@ class ArTestRunner
   end
   
   def use_all_app_files?
-    ENV['APP'] || (plugins.blank? && requires.blank? && expanded_files.blank?)
+    if ENV['AR_RUN_DEFAULT'].nil?
+      ENV['AR_RUN_DEFAULT'] = (plugins.blank? && requires.blank? && expanded_files.blank?).to_s
+    end
+    ENV['AR_RUN_DEFAULT']
   end
   
   protected
@@ -186,3 +185,5 @@ class ArTestRunner
     print_list 'Automatically Skipped Files (references ActionController)', auto_skip
   end
 end
+
+load "#{File.dirname(__FILE__)}/../tasks/ar_test_runner_tasks.rake"

@@ -1,7 +1,7 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
-
+require 'echoe'
 desc 'Default: run unit tests.'
 task :default => :test
 
@@ -21,3 +21,14 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('README')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
+Echoe.new('ar_test_runner', '0.1.0') do |p|
+  p.description    = "Run ActiveRecord core regression tests with your code/gem/plugin/module loaded"
+  p.url            = "http://github.com/blythedunham/ar_test_runner"
+  p.author         = "Blythe Dunham"
+  p.email          = "blythe@snowgiraffe.com"
+  p.ignore_pattern = ["tmp/*", "script/*"]
+  p.development_dependencies = []
+end
+
+Dir["#{File.dirname(__FILE__)}/tasks/*.rake"].sort.each { |ext| load ext }
