@@ -24,7 +24,7 @@ end
 
 desc "Install the application"
 task :install do
-  ruby "install.rb"
+  ruby "gem_install.rb"
 end
 
 Echoe.new('ar_test_runner', '0.1.0') do |p|

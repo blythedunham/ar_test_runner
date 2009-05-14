@@ -1,3 +1,6 @@
+puts "INSTALL RUNNING"
+
+if false
 require 'rbconfig'
 require 'find'
 require 'ftools'
@@ -86,3 +89,4 @@ end
 # and the executable
 
 installBIN("bin/ar_test_runner", "ar_test_runner")
+end
