@@ -1,3 +1,4 @@
+
 class ArTestRunner
   
   attr_reader :auto_skip
@@ -5,7 +6,7 @@ class ArTestRunner
   unless defined? ADAPTERS
     ADAPTERS = %w( mysql postgresql sqlite sqlite3 firebird db2 oracle sybase openbase frontbase jdbcmysql jdbcpostgresql jdbcsqlite3 jdbcderby jdbch2 jdbchsqldb )
     REQUIRE_ALL_GLOB= %w(vendor/plugins/*/init.rb lib/*.rb)
-    DEFAULT_REQUIRES = [File.join(File.dirname(__FILE__), 'ar_test_runner_includes.rb')]
+    DEFAULT_REQUIRES = [File.expand_path(File.join(File.dirname(__FILE__), 'ar_test_runner_includes.rb'))]
   end
   
   #run the whole thing
@@ -29,7 +30,7 @@ class ArTestRunner
   
   #a list of files to require run running the ActiveRecord test suite
   def required_files
-    return @required_files unless @required_files.blank?
+    return @required_files unless @required_files.nil?
     @required_files = DEFAULT_REQUIRES.dup
     @required_files.concat(requires)
     @required_files.concat(plugins)
@@ -111,7 +112,7 @@ class ArTestRunner
   # Note: this is not the best way. Loads this under the context of 
   # the activerecord version of the app
   def skip_files!(orig_files)
-    return orig_files if skipped_files.blank? && !use_all_app_files? 
+    return orig_files if skipped_files.empty? && !use_all_app_files? 
 
     #include activerecord
     require File.join(activerecord_dir, 'lib', 'activerecord.rb')
@@ -122,7 +123,7 @@ class ArTestRunner
   
   def use_all_app_files?
     if ENV['AR_RUN_DEFAULT'].nil?
-      ENV['AR_RUN_DEFAULT'] = (plugins.blank? && requires.blank? && expanded_files.blank?).to_s
+      ENV['AR_RUN_DEFAULT'] = (plugins.empty? && requires.empty? && expanded_files.empty?).to_s
     end
     ENV['AR_RUN_DEFAULT']
   end
@@ -174,7 +175,7 @@ class ArTestRunner
   end
 
   def print_list(msg, file_list)
-    STDOUT.puts "#{msg}:\n  #{ [file_list].flatten.join("\n  ") }" unless file_list.blank?
+    STDOUT.puts "#{msg}:\n  #{ [file_list].flatten.join("\n  ") }" unless file_list.nil? || file_list == ''
   end
   
   def print_info
@@ -186,4 +187,4 @@ class ArTestRunner
   end
 end
 
-load "#{File.dirname(__FILE__)}/../tasks/ar_test_runner_tasks.rake"
+load "#{File.dirname(__FILE__)}/../tasks/ar_test_runner_tasks.rake" unless ENV['AR_RUN_CMD'] == 'true'

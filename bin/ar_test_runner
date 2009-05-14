@@ -1,4 +1,21 @@
 #!/usr/bin/env ruby
 require 'config/boot'
-require 'ar_test_runner'
+ENV['AR_RUN_CMD'] = 'true'
+begin
+  puts "SET ENV1"
+  require 'ar_test_runner'
+rescue LoadError => exc
+  puts "SET ENV2"
+  file = File.dirname(__FILE__)+'/../lib/ar_test_runner.rb'
+  if File.exists?(file)
+    require file 
+  else
+    puts "Cannot load ar_test_runner. Is the gem or plugin installed?"
+    exit
+  end
+end
+
+puts "SET ENV"
+
+
 ArTestRunner.run!
