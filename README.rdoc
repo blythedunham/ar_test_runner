@@ -1,21 +1,40 @@
 = ArTestRunner
 Run the ActiveRecord test suite with your gem/module/plugin loaded. Choose the ActiveRecord version and database.
 
-
 == Install
+Install as either a gem or a plugin.
+=== Gem
+  gem sources -a http://gems.github.com
+  sudo gem install blythedunham-ar_test_runner
+
+=== Plugin
   script/plugin install git://github.com/blythedunham/ar_test_runner
 
-== Run rake tests from <tt>RAILS_ROOT</tt>
+== Run
+Run either of these from the RAILS_ROOT of your application
 
+=== ar_test_runner
+
+Run all plugins and lib files against sqlite for app version
+  ar_test_runner DB=sqlite
+
+Test 2.3.2 with <tt>rails_devs_for_data_integrity</tt> plugin loaded on mysql (default)
+  ar_test_runner PLUGIN=rails_devs_for_data_integrity AR_DIR=/Library/Ruby/Gems/1.8/gems/activerecord-2.3.2
+
+If installed as a gem, the executable is copied to your bin. With a plugin, you should invoke the file directly
+  vendor/plugins/ar_test_runner/bin/ar_test_runner
+
+=== Rake task
 Run all plugins and lib files against sqlite for app version
   rake test:activerecord:sqlite
 
 Test 2.3.2 with <tt>rails_devs_for_data_integrity</tt> plugin loaded on mysql
   rake test:activerecord:mysql PLUGIN=rails_devs_for_data_integrity AR_DIR=/Library/Ruby/Gems/1.8/gems/activerecord-2.3.2
 
+With a plugin, rake tasks will automatically appear. If installed as a gem, please require 'ar_test_runner' in the Rakefile
+  require 'ar_test_runner'
 
-
-Parameters
+=== Parameters
 * <tt>AR_DIR</tt> - ActiveRecord directory. Works with frozen rails directories and gem locations. Defaults to the apps version of ActiveRecord
 * <tt>PLUGIN</tt> - specify a plugin to use
 * <tt>FILE</tt> - files to load separated with commas. Create a file that requires everything you need loaded for super detailed configurations. Relative and full paths are fine.
@@ -23,10 +42,12 @@ Parameters
 * <tt>SKIP</tt> - list of directories or file names separated by commas to exclude.
 * <tt>DRY_RUN</tt> - prints out list of files to loaded but does not run the tests
 * <tt>AR_RUN_DEFAULT</tt> - set to true to include all files in the lib directory and plugins. These are run when <tt>REQUIRE</tt>,<tt>FILE</tt>, and <tt>PLUGIN</tt> is not specified
+* <tt>DB</tt> - specify the db name (ex: +sqlite+ or +mysql+) with +DB+ when using this with +ar_test_runner+ ruby script. The database is specified in the task when run as a rake task. Example: <tt> rake test:activerecord:mysql</tt>
+
 
 If <tt>REQUIRE</tt>,<tt>FILE</tt>, and <tt>PLUGIN</tt> are not specified, or <tt>AR_RUN_DEFAULT</tt> is set, all plugins(<tt>vendor/plugins/**/init.rb</tt>) and lib files(<tt>lib/*.rb</tt>) are loaded. Use <tt>SKIP</tt> to exclude directories. Plugins referencing <tt>ActionController</tt> are automatically disabled.
 
-== Examples
+=== Examples
 
 <b>Run default</b> 
 Run (plugins and libs) on postgre

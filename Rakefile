@@ -27,7 +27,7 @@ task :install do
   ruby "gem_install.rb"
 end
 
-Echoe.new('ar_test_runner', '0.1.0') do |p|
+Echoe.new('ar_test_runner', '0.1.1') do |p|
   p.description    = "Run ActiveRecord core regression tests with your code/gem/plugin/module loaded"
   p.url            = "http://github.com/blythedunham/ar_test_runner"
   p.author         = "Blythe Dunham"

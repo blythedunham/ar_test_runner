@@ -4,9 +4,9 @@ gem_install.rb
 init.rb
 lib/ar_test_runner.rb
 lib/ar_test_runner_includes.rb
+Manifest
 MIT-LICENSE
 Rakefile
 README.rdoc
 tasks/ar_test_runner_tasks.rake
 uninstall.rb
-Manifest
